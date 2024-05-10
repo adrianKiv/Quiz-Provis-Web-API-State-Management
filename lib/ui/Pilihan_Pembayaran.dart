@@ -117,8 +117,8 @@ class _Pilihan_PembayaranState extends State<Pilihan_Pembayaran> {
     return BottomAppBar(
       color: Colors.white,
       child: GestureDetector(
-        onTap: () {
-          setStatusBayar();
+        onTap: () async {
+          await setStatusBayar();
           Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Monitoringstatus()),

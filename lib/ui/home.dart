@@ -48,20 +48,18 @@ Future<List<Item>> fetchItems() async {
   );
 
   if (response.statusCode == 200) {
-    print('berhasil');
     List jsonResponse = json.decode(response.body);
     List<Item> items = jsonResponse.map((item) => Item.fromJson(item)).toList();
 
     // Untuk setiap item, panggil API gambar dan perbarui imageUrl
     for (var item in items) {
       final imageUrl = await fetchItemImage(item.id);
-      print(imageUrl);
+      
       item.imageUrl = imageUrl;
     }
 
     return items;
   } else {
-    print('gagal');
     throw Exception('Failed to load items');
   }
 }
@@ -70,15 +68,16 @@ Future<List<Item>> fetchItems() async {
 
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   final Box _boxLogin = Hive.box("login");
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<Item> _items = []; // This should be your original list of items
   List<Item> _filteredItems = []; // This will be the list of items after search
 
@@ -116,7 +115,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: TextField(
           controller: _searchController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'Search',
           ),
         ),

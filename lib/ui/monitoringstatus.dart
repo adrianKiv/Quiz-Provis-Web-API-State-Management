@@ -26,14 +26,10 @@ Future<String> getStatus() async {
   );
 
   if (response.statusCode == 200) {
-    print(userId);
-    print('Berhasil mendapatkan status');
     Map<String, dynamic> parsedJson = jsonDecode(response.body);
     String status = parsedJson['status']['status'];
-    print(status);
     return status;
   } else {
-    print('Gagal mendapatkan status');
     throw Exception('Failed to get status');
   }
 }
@@ -53,10 +49,51 @@ Future<void> setStatusDiterima() async {
   );
 
   if (response.statusCode == 200) {
-    print(userId);
     print('Berhasil mengatur status menjadi diterima');
   } else {
-    print('Gagal mengatur status');
+    throw Exception('Failed to set status');
+  }
+}
+
+Future<void> setStatusDiantar() async {
+  final String? accessToken = Hive.box("login").get('accessToken');
+  final int? userId = Hive.box("login").get('userId');
+  if (accessToken == null) {
+    throw Exception('No access token found');
+  }
+
+  final response = await http.post(
+    Uri.parse('http://146.190.109.66:8000/set_status_diantar/$userId'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    print('Berhasil mengatur status menjadi diantar');
+  } else {
+
+    throw Exception('Failed to set status');
+  }
+}
+
+Future<void> setStatusSampai() async {
+  final String? accessToken = Hive.box("login").get('accessToken');
+  final int? userId = Hive.box("login").get('userId');
+  if (accessToken == null) {
+    throw Exception('No access token found');
+  }
+
+  final response = await http.post(
+    Uri.parse('http://146.190.109.66:8000/set_status_diterima/$userId'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    print('Berhasil mengatur status menjadi diterima');
+  } else {
     throw Exception('Failed to set status');
   }
 }
@@ -68,7 +105,7 @@ Future<void> setStatusDitolak() async {
     throw Exception('No access token found');
   }
 
-   final response = await http.delete(
+   final response = await http.post(
       Uri.parse('http://146.190.109.66:8000/set_status_penjual_tolak/$userId'), 
       headers: {
         'Authorization': 'Bearer $accessToken',
@@ -76,10 +113,8 @@ Future<void> setStatusDitolak() async {
     );
 
   if (response.statusCode == 200) {
-    print(userId);
     print('Berhasil mengatur status menjadi Ditolak');
   } else {
-    print('Gagal menghapus cart');
     throw Exception('Failed to set status');
   }
 }
@@ -91,7 +126,7 @@ Future<void> pembersiahanCart() async {
     throw Exception('No access token found');
   }
 
-  final response = await http.post(
+  final response = await http.delete(
     Uri.parse('http://146.190.109.66:8000/clear_whole_carts_by_userid/$userId'),
     headers: {
       'Authorization': 'Bearer $accessToken',
@@ -99,10 +134,8 @@ Future<void> pembersiahanCart() async {
   );
 
   if (response.statusCode == 200) {
-    print(userId);
     print('Berhasil mengatur status menjadi harap bayar');
   } else {
-    print('Gagal mengatur status');
     throw Exception('Failed to set status');
   }
 }
@@ -112,9 +145,10 @@ Future<void> pembersiahanCart() async {
 
 
 class Monitoringstatus extends StatefulWidget {
-  Monitoringstatus({Key? key}) : super(key: key);
+  const Monitoringstatus({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _MonitoringstatusState createState() => _MonitoringstatusState();
 }
 
@@ -124,28 +158,30 @@ class _MonitoringstatusState extends State<Monitoringstatus> {
   @override
  void initState() {
   super.initState();
-  print("test1");
-  _timer = Timer.periodic(const Duration(seconds: 30), (Timer t) async {
-    var rng = new Random();
+  
+  _timer = Timer.periodic(const Duration(seconds: 5), (Timer t) async {
+    var rng = Random();
     int randomNumber = rng.nextInt(2); // Membuat angka acak 0 atau 1
-    print("test2");
+    
     String status = await getStatus();
-    print(status);
+    
     // ignore: unrelated_type_equality_checks
     if ("sudah_bayar" == status) {
-      print("test3");
       if (randomNumber == 0) {
-        setStatusDiterima();
+        await setStatusDiterima();
+        await setStatusDiantar();
         Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
-        MaterialPageRoute(builder: (context) => Monitoringstatus()),
+        MaterialPageRoute(builder: (context) => const Monitoringstatus()),
       );
       } else {
-        setStatusDitolak();
-        pembersiahanCart();
+        await setStatusDitolak();
+        await pembersiahanCart();
         Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
-        MaterialPageRoute(builder: (context) => Monitoringstatus()),
+        MaterialPageRoute(builder: (context) => const Monitoringstatus()),
       );
       }
     }
@@ -197,23 +233,35 @@ void dispose() {
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      bottomNavigationBar: BottomNavigasiBar(inputan: 1),
+      bottomNavigationBar: const BottomNavigasiBar(inputan: 1),
       body: Center(
           child: FutureBuilder<String>(
         future: getStatus(), // fungsi yang Anda buat untuk mendapatkan status
         builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else {
-            if (snapshot.hasError)
+            if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
-            else {
+            } else {
               String status = snapshot.data ?? '';
               switch (status) {
                 case 'belum_bayar':
                   return BelumBayar(context);
-                case 'pesanan_diterima':
-                  return diantar(context);
+                case 'pesanan_selesai':
+                  return selesai(context);
+                case 'pesanan_ditolak':
+                  return ditolak(context);
+                case 'pesanaan_diantar':
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      diantar(context),
+                      const SizedBox(height: 20,),
+                      diterima(context),
+                    ],
+                  );
                 // tambahkan kasus lainnya sesuai kebutuhan
                 default:
                   return tunggu(context);
@@ -252,12 +300,22 @@ Widget tunggu(BuildContext context) {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.white
+      color: Colors.yellow
     ),
     child: const Text("pesanan sedang di cek"),
   );
 }
 
+Widget ditolak(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.red
+    ),
+    child: const Text("pesanan Ditolak penjual"),
+  );
+}
 Widget diantar(BuildContext context) {
   return Container(
     padding: const EdgeInsets.all(20),
@@ -266,6 +324,42 @@ Widget diantar(BuildContext context) {
       color: Colors.white
     ),
     child: const Text("pesanan diantar"),
+  );
+}
+
+Widget selesai(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: Colors.green
+    ),
+    child: const Text("pesanan sudah di antar"),
+  );
+}
+
+Widget diterima(BuildContext context) {
+  return GestureDetector(
+    onTap: () async {
+      await setStatusSampai();
+      await pembersiahanCart();
+      Navigator.push(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(
+          builder: (context) => Monitoringstatus(), // Kirimkan item ke NextPage
+        ),
+      );
+      // Anda bisa menambahkan aksi yang diinginkan saat Container diklik di sini
+    },
+    child: Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.green
+      ),
+      child: const Text("sudah sampai"),
+    ),
   );
 }
 }

@@ -4,6 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:kuis_webapi/models/item.dart';
 import 'package:http/http.dart' as http;
+import 'package:kuis_webapi/ui/home.dart';
+
+Future<String> getStatus() async {
+  final String? accessToken = Hive.box("login").get('accessToken');
+  final int? userId = Hive.box("login").get('userId');
+  if (accessToken == null) {
+    throw Exception('No access token found');
+  }
+
+  final response = await http.get(
+    Uri.parse('http://146.190.109.66:8000/get_status/$userId'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> parsedJson = jsonDecode(response.body);
+    String status = parsedJson['status']['status'];
+    return status;
+  } else {
+    throw Exception('Failed to get status');
+  }
+}
 
 Future<void> setStatusHarapBayar() async {
   final String? accessToken = Hive.box("login").get('accessToken');
@@ -20,10 +44,8 @@ Future<void> setStatusHarapBayar() async {
   );
 
   if (response.statusCode == 200) {
-    print(userId);
     print('Berhasil mengatur status menjadi harap bayar');
   } else {
-    print('Gagal mengatur status');
     throw Exception('Failed to set status');
   }
 }
@@ -37,23 +59,30 @@ Future<String> addToCart(Item item) async {
     throw Exception('No access token or user ID found');
   }
 
-  final response = await http.post(
-    Uri.parse('http://146.190.109.66:8000/carts/'),
-    headers: {
-      'Authorization': 'Bearer $accessToken',
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'item_id': item.id,
-      'user_id': userId,
-      'quantity': 1, // Ganti dengan kuantitas yang diinginkan
-    }),
-  );
+  String status = await getStatus();
+  if(status != "pesanaan_diantar"){
 
-  if (response.statusCode == 200) {
-    setStatusHarapBayar();
-    return 'Berhasil menambahkan item ke keranjang';
-  } else {
+    final response = await http.post(
+      Uri.parse('http://146.190.109.66:8000/carts/'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'item_id': item.id,
+        'user_id': userId,
+        'quantity': 1, // Ganti dengan kuantitas yang diinginkan
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      setStatusHarapBayar();
+      return 'Berhasil menambahkan item ke keranjang';
+    } else {
+      throw Exception('Gagal menambahkan item ke keranjang');
+    }
+  }else{
+    
     throw Exception('Gagal menambahkan item ke keranjang');
   }
 }
@@ -63,7 +92,7 @@ Future<String> addToCart(Item item) async {
 class FoodDetailPage extends StatelessWidget {
   final Item item;
 
-  FoodDetailPage({Key? key, required this.item}) : super(key: key);
+  const FoodDetailPage({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +136,12 @@ class FoodDetailPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   try {
-                    final message = await addToCart(item);
-                    print(message); // Tampilkan pesan sukses
+                    await addToCart(item);
+                    Navigator.pushReplacement(
+                      // ignore: use_build_context_synchronously
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
                   } catch (e) {
                     print(e); // Tampilkan pesan kesalahan
                   }
