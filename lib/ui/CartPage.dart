@@ -71,6 +71,7 @@ class CartPage extends StatelessWidget {
       throw Exception('Failed to delete cart');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,15 +94,6 @@ class CartPage extends StatelessWidget {
       bottomNavigationBar: const BottomNavigasiBar(inputan: 2),
       body: Column(
         children: [
-          ElevatedButton(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Pilihan_Pembayaran(), // Kirimkan item ke NextPage
-              ),
-            );
-          }, 
-          child: const Text("checkout")),
           Expanded(
             child: FutureBuilder<List<Cart>>(
               future: fetchCarts(),
@@ -157,10 +149,16 @@ class CartPage extends StatelessWidget {
                     return const SizedBox(); // Mengembalikan widget kosong jika tidak ada data
                   },
                 ),
+                // Tambahkan tombol checkout di sini
                 ElevatedButton(
                   onPressed: () {
-                    // Tambahkan logika checkout di sini
-                  },
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Pilihan_Pembayaran(), // Kirimkan item ke NextPage
+                      ),
+                    );
+                  }, 
                   child: const Text("Checkout"),
                 ),
               ],
