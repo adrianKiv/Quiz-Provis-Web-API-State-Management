@@ -93,8 +93,6 @@ class CartPage extends StatelessWidget {
       bottomNavigationBar: const BottomNavigasiBar(inputan: 2),
       body: Column(
         children: [
-<<<<<<< HEAD
-=======
           ElevatedButton(onPressed: () {
             Navigator.push(
               context,
@@ -104,7 +102,6 @@ class CartPage extends StatelessWidget {
             );
           }, 
           child: const Text("checkout")),
->>>>>>> f7c05f7a937f205ece81f756a4c72647eba0c64d
           Expanded(
             child: FutureBuilder<List<Cart>>(
               future: fetchCarts(),
