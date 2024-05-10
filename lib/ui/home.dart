@@ -117,9 +117,9 @@ class _HomeState extends State<Home> {
           controller: _searchController,
           decoration: const InputDecoration(
             hintText: 'Search',
-            prefixIcon: Icon(Icons.search, size: const 30),
+            prefixIcon: Icon(Icons.search, size: 30),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              
               borderSide: const BorderSide(width: 2.0),
             ),
           ),
