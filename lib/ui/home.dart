@@ -86,7 +86,6 @@ class Home extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
                     title: Text(snapshot.data![index].title),
-                    subtitle: Text(snapshot.data![index].description),
                   );
                 },
               );
