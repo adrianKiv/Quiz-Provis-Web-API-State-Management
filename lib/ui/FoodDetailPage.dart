@@ -5,6 +5,30 @@ import 'package:hive/hive.dart';
 import 'package:kuis_webapi/models/item.dart';
 import 'package:http/http.dart' as http;
 
+Future<void> setStatusHarapBayar() async {
+  final String? accessToken = Hive.box("login").get('accessToken');
+  final int? userId = Hive.box("login").get('userId');
+  if (accessToken == null) {
+    throw Exception('No access token found');
+  }
+
+  final response = await http.post(
+    Uri.parse('http://146.190.109.66:8000/set_status_harap_bayar/$userId'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    print(userId);
+    print('Berhasil mengatur status menjadi harap bayar');
+  } else {
+    print('Gagal mengatur status');
+    throw Exception('Failed to set status');
+  }
+}
+
+
 Future<String> addToCart(Item item) async {
   final String? accessToken = Hive.box("login").get('accessToken');
   final int? userId = Hive.box("login").get('userId');
@@ -27,6 +51,7 @@ Future<String> addToCart(Item item) async {
   );
 
   if (response.statusCode == 200) {
+    setStatusHarapBayar();
     return 'Berhasil menambahkan item ke keranjang';
   } else {
     throw Exception('Gagal menambahkan item ke keranjang');

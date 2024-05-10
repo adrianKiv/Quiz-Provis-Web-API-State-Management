@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
+import 'package:kuis_webapi/ui/monitoringstatus.dart';
 
 
 // ignore: camel_case_types
@@ -8,6 +11,29 @@ class Pilihan_Pembayaran extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
   _Pilihan_PembayaranState createState() => _Pilihan_PembayaranState();
+}
+
+Future<void> setStatusBayar() async {
+  final String? accessToken = Hive.box("login").get('accessToken');
+  final int? userId = Hive.box("login").get('userId');
+  if (accessToken == null) {
+    throw Exception('No access token found');
+  }
+
+  final response = await http.post(
+    Uri.parse('http://146.190.109.66:8000/pembayaran/$userId'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    print(userId);
+    print('Berhasil mengatur status menjadi bayar');
+  } else {
+    print('Gagal mengatur status');
+    throw Exception('Failed to set status');
+  }
 }
 
 // ignore: camel_case_types
@@ -92,7 +118,11 @@ class _Pilihan_PembayaranState extends State<Pilihan_Pembayaran> {
       color: Colors.white,
       child: GestureDetector(
         onTap: () {
-          
+          setStatusBayar();
+          Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Monitoringstatus()),
+      );
         },
         child: Container(
           width: 350,
