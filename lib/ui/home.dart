@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'login.dart';
+import 'bottomNav.dart'; // Pastikan untuk mengimpor file yang berisi BottomNav
 
 class Home extends StatelessWidget {
   Home({super.key});
@@ -58,6 +59,7 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNav(),
     );
   }
 }
