@@ -69,7 +69,7 @@ Future<void> setStatusDitolak() async {
   }
 
    final response = await http.delete(
-      Uri.parse('http://146.190.109.66:8000/clear_whole_carts_by_userid/$userId'), 
+      Uri.parse('http://146.190.109.66:8000/set_status_penjual_tolak/$userId'), 
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
@@ -92,7 +92,7 @@ Future<void> pembersiahanCart() async {
   }
 
   final response = await http.post(
-    Uri.parse('http://146.190.109.66:8000/pembayaran/$userId'),
+    Uri.parse('http://146.190.109.66:8000/clear_whole_carts_by_userid/$userId'),
     headers: {
       'Authorization': 'Bearer $accessToken',
     },
