@@ -115,10 +115,10 @@ class Home extends StatelessWidget {
                   // Mendapatkan ukuran layar
                   double screenWidth = MediaQuery.of(context).size.width;
                   double screenHeight = MediaQuery.of(context).size.height;
-
+git
                   // Menentukan ukuran berdasarkan ukuran layar
                   int crossAxisCount = screenWidth > 600? 3 : 2; // Contoh penyesuaian
-                  double avatarRadius = screenWidth > 600? 125 : 75; // Contoh penyesuaian
+                  double avatarRadius = screenWidth > 600? 115 : 60; // Contoh penyesuaian
 
                   return GridView.builder(
                     padding: const EdgeInsets.all(10.0),
