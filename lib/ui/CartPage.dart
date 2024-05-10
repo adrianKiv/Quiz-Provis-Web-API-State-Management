@@ -92,10 +92,6 @@ class CartPage extends StatelessWidget {
       bottomNavigationBar: const BottomNavigasiBar(inputan: 2),
       body: Column(
         children: [
-          ElevatedButton(onPressed: () {
-
-          }, 
-          child: const Text("checkout")),
           Expanded(
             child: FutureBuilder<List<Cart>>(
               future: fetchCarts(),
@@ -107,27 +103,57 @@ class CartPage extends StatelessWidget {
                       final cart = snapshot.data![index];
                       return ListTile(
                         leading: Image.memory(cart.toItem().imageUrl),
-                        title: Text(
-                            'Nama: ${cart.toItem().title}'), // Ganti dengan nama item
-                        subtitle: Text(
-                            'Harga: ${cart.toItem().price}'), // Ganti dengan deskripsi item
+                        title: Text('Nama: ${cart.toItem().title}'),
+                        subtitle: Text('Harga: ${cart.toItem().price}'),
                         trailing: ElevatedButton(
-                            onPressed: () async {
-                              
-                              await deleteCart(context, cart.id);
-                            },
-                            child: const Icon(Icons.remove), // Ganti dengan harga item
-                        )
+                          onPressed: () async {
+                            await deleteCart(context, cart.id);
+                          },
+                          child: const Icon(Icons.delete),
+                        ),
                       );
                     },
                   );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-            
+
                 // By default, show a loading spinner.
                 return const CircularProgressIndicator();
               },
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            color: Colors.blue,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FutureBuilder<List<Cart>>(
+                  future: fetchCarts(),
+                  builder: (BuildContext context, AsyncSnapshot<List<Cart>> snapshot) {
+                    if (snapshot.hasData) {
+                      final totalHarga = snapshot.data!
+                          .map((cart) => cart.toItem().price)
+                          .reduce((value, element) => value + element);
+                      return Text(
+                        'Total Harga: $totalHarga',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+
+                    return const SizedBox(); // Mengembalikan widget kosong jika tidak ada data
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Tambahkan logika checkout di sini
+                  },
+                  child: const Text("Checkout"),
+                ),
+              ],
             ),
           ),
         ],
