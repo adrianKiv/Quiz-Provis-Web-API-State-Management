@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuis_webapi/ui/home.dart';
 import 'package:kuis_webapi/ui/monitoringstatus.dart';
-import 'package:kuis_webapi/ui/cart.dart';
+import 'package:kuis_webapi/ui/CartPage.dart';
 
 class BottomNavigasiBar extends StatefulWidget {
   
@@ -59,7 +59,7 @@ class _BottomNavigasiBarState extends State<BottomNavigasiBar> {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             // ignore: non_constant_identifier_names
-            builder: (Context) => Cart(),
+            builder: (Context) => CartPage(),
           ),
           (route) => false);
         // Lakukan sesuatu untuk item ketiga di sini
