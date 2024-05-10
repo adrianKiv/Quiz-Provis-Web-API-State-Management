@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:kuis_webapi/models/cart.dart';
 import 'package:kuis_webapi/models/item.dart';
+import 'package:kuis_webapi/ui/Pilihan_Pembayaran.dart';
 
 import 'dart:convert';
 import 'login.dart';
@@ -92,6 +93,18 @@ class CartPage extends StatelessWidget {
       bottomNavigationBar: const BottomNavigasiBar(inputan: 2),
       body: Column(
         children: [
+<<<<<<< HEAD
+=======
+          ElevatedButton(onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Pilihan_Pembayaran(), // Kirimkan item ke NextPage
+              ),
+            );
+          }, 
+          child: const Text("checkout")),
+>>>>>>> f7c05f7a937f205ece81f756a4c72647eba0c64d
           Expanded(
             child: FutureBuilder<List<Cart>>(
               future: fetchCarts(),
