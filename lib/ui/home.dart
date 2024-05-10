@@ -107,38 +107,50 @@ class Home extends StatelessWidget {
       bottomNavigationBar: const BottomNavigasiBar(inputan: 0),
       body: Center(
         child: FutureBuilder<List<Item>>(
-          future: fetchItems(),
+          future: fetchItems(), // Pastikan fetchItems() adalah fungsi yang mengembalikan Future<List<Item>>
           builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
             if (snapshot.hasData) {
-              return GridView.builder(
-                padding: const EdgeInsets.all(10.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // Jumlah item dalam setiap baris
-                  crossAxisSpacing: 10.0, // Spasi antar kolom
-                  mainAxisSpacing: 10.0, // Spasi antar baris
-                ),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final item = snapshot.data![index];
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0), // Radius sudut bulat
+              return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  // Mendapatkan ukuran layar
+                  double screenWidth = MediaQuery.of(context).size.width;
+                  double screenHeight = MediaQuery.of(context).size.height;
+
+                  // Menentukan ukuran berdasarkan ukuran layar
+                  int crossAxisCount = screenWidth > 600? 3 : 2; // Contoh penyesuaian
+                  double avatarRadius = screenWidth > 600? 125 : 75; // Contoh penyesuaian
+
+                  return GridView.builder(
+                    padding: const EdgeInsets.all(10.0),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center, // Memusatkan di dalam Column
-                      children: <Widget>[
-                        CircleAvatar( // Menggunakan CircleAvatar untuk membuat gambar bulat
-                          backgroundImage: MemoryImage(item.imageUrl),
-                          radius: 125, // Radius gambar
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final item = snapshot.data![index];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                        const SizedBox(height: 10.0), // Memberikan jarak antara gambar dan teks
-                        Text(
-                          item.title,
-                          style: const TextStyle(fontSize: 16.0), // Mengatur ukuran teks
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            CircleAvatar(
+                              backgroundImage: MemoryImage(item.imageUrl),
+                              radius: avatarRadius,
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              item.title,
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                            // Tampilkan detail lainnya tentang item di sini
+                          ],
                         ),
-                        // Tampilkan detail lainnya tentang item di sini
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               );
