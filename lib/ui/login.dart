@@ -203,7 +203,7 @@ class _LoginState extends State<Login> {
   // final Box _boxAccounts = Hive.box("accounts");
 
   Future<void> _loginUser() async {
-    final String apiUrl = 'http://146.190.109.66:8000/login';
+    const String apiUrl = 'http://146.190.109.66:8000/login';
     print(_controllerUsername.text);
     print(_controllerPassword.text);
     final Map<String, dynamic> loginData = {
