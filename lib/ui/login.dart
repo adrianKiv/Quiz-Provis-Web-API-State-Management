@@ -200,7 +200,7 @@ class _LoginState extends State<Login> {
 
   bool _obscurePassword = true;
   final Box _boxLogin = Hive.box("login");
-  final Box _boxAccounts = Hive.box("accounts");
+  // final Box _boxAccounts = Hive.box("accounts");
 
   Future<void> _loginUser() async {
     final String apiUrl = 'http://146.190.109.66:8000/login';

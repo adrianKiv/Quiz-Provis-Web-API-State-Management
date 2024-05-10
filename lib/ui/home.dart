@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -8,7 +10,26 @@ import 'dart:convert';
 import 'login.dart';
 import 'bottomNav.dart'; // Pastikan untuk mengimpor file yang berisi BottomNav
 
+Future<Uint8List> fetchItemImage(int itemId) async {
+  final String? accessToken = Hive.box("login").get('accessToken');
 
+  if (accessToken == null) {
+    throw Exception('No access token found');
+  }
+
+  final response = await http.get(
+    Uri.parse('http://146.190.109.66:8000/items_image/$itemId'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return response.bodyBytes;
+  } else {
+    throw Exception('Failed to load item image');
+  }
+}
 
 
 Future<List<Item>> fetchItems() async {
@@ -28,13 +49,21 @@ Future<List<Item>> fetchItems() async {
   if (response.statusCode == 200) {
     print('berhasil');
     List jsonResponse = json.decode(response.body);
-    return jsonResponse.map((item) => Item.fromJson(item)).toList();
+    List<Item> items = jsonResponse.map((item) => Item.fromJson(item)).toList();
+
+    // Untuk setiap item, panggil API gambar dan perbarui imageUrl
+    for (var item in items) {
+      final imageUrl = await fetchItemImage(item.id);
+      print(imageUrl);
+      item.imageUrl = imageUrl;
+    }
+
+    return items;
   } else {
-    print('test');
+    print('gagal');
     throw Exception('Failed to load items');
   }
 }
-
 
 class Home extends StatelessWidget {
   Home({super.key});
@@ -75,7 +104,7 @@ class Home extends StatelessWidget {
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      bottomNavigationBar: BottomNavigasiBar(inputan: 0),
+      bottomNavigationBar: const BottomNavigasiBar(inputan: 0),
       body: Center(
         child: FutureBuilder<List<Item>>(
           future: fetchItems(),
@@ -83,9 +112,12 @@ class Home extends StatelessWidget {
             if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, index) {
+                  final item = snapshot.data![index];
                   return ListTile(
-                    title: Text(snapshot.data![index].title),
+                    leading: Image.memory(item.imageUrl),
+                    title: Text(item.title),
+                    // Tampilkan detail lainnya tentang item di sini
                   );
                 },
               );
