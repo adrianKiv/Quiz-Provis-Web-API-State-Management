@@ -5,6 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:kuis_webapi/models/item.dart';
+import 'package:kuis_webapi/ui/FoodDetailPage.dart';
 import 'dart:convert';
 
 import 'login.dart';
@@ -130,24 +131,34 @@ git
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final item = snapshot.data![index];
-                      return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            CircleAvatar(
-                              backgroundImage: MemoryImage(item.imageUrl),
-                              radius: avatarRadius,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FoodDetailPage(item: item), // Kirimkan item ke NextPage
                             ),
-                            const SizedBox(height: 10.0),
-                            Text(
-                              item.title,
-                              style: const TextStyle(fontSize: 16.0),
-                            ),
-                            // Tampilkan detail lainnya tentang item di sini
-                          ],
+                          );
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              CircleAvatar(
+                                backgroundImage: MemoryImage(item.imageUrl),
+                                radius: avatarRadius,
+                              ),
+                              const SizedBox(height: 10.0),
+                              Text(
+                                item.title,
+                                style: const TextStyle(fontSize: 16.0),
+                              ),
+                              // Tampilkan detail lainnya tentang item di sini
+                            ],
+                          ),
                         ),
                       );
                     },
