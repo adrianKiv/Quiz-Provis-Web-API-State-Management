@@ -1,5 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:kuis_webapi/models/item.dart';
+import 'package:http/http.dart' as http;
+
+Future<String> addToCart(Item item) async {
+  final String? accessToken = Hive.box("login").get('accessToken');
+  final int? userId = Hive.box("login").get('userId');
+
+  if (accessToken == null || userId == null) {
+    throw Exception('No access token or user ID found');
+  }
+
+  final response = await http.post(
+    Uri.parse('http://146.190.109.66:8000/carts/'),
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({
+      'item_id': item.id,
+      'user_id': userId,
+      'quantity': 1, // Ganti dengan kuantitas yang diinginkan
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return 'Berhasil menambahkan item ke keranjang';
+  } else {
+    throw Exception('Gagal menambahkan item ke keranjang');
+  }
+}
+
+
 
 class FoodDetailPage extends StatelessWidget {
   final Item item;
@@ -46,8 +80,13 @@ class FoodDetailPage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Tambahkan logika untuk menambahkan item ke keranjang belanja di sini
+                onPressed: () async {
+                  try {
+                    final message = await addToCart(item);
+                    print(message); // Tampilkan pesan sukses
+                  } catch (e) {
+                    print(e); // Tampilkan pesan kesalahan
+                  }
                 },
                 child: const Text('Tambahkan ke Keranjang'),
               ),

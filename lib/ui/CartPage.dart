@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:kuis_webapi/models/cart.dart';
+import 'package:kuis_webapi/models/item.dart';
 
 
 import 'dart:convert';
@@ -71,8 +72,9 @@ class CartPage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final cart = snapshot.data![index];
                 return ListTile(
-                  title: Text('Item ID: ${cart.itemId}'), // Ganti dengan nama item
-                  subtitle: Text('Quantity: ${cart.quantity}'), // Ganti dengan deskripsi item
+                  leading: Image.memory(cart.toItem().imageUrl),
+                  title: Text('Nama: ${cart.toItem().title}'), // Ganti dengan nama item
+                  subtitle: Text('Harga: ${cart.toItem().price}'), // Ganti dengan deskripsi item
                   trailing: Text('User ID: ${cart.userId}'), // Ganti dengan harga item
                 );
               },

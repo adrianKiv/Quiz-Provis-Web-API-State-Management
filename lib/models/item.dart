@@ -27,4 +27,8 @@ class Item {
       imageUrl: Uint8List(0), 
     );
   }
+
+
 }
+
+List<Item> globalItems = [];

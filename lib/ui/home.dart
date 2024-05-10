@@ -66,13 +66,22 @@ Future<List<Item>> fetchItems() async {
   }
 }
 
+
+
+
+
+
+
 class Home extends StatelessWidget {
   Home({super.key});
-
+  
   final Box _boxLogin = Hive.box("login");
 
   @override
   Widget build(BuildContext context) {
+    fetchItems().then((items) {
+      globalItems = items;
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
@@ -115,7 +124,6 @@ class Home extends StatelessWidget {
                 builder: (BuildContext context, BoxConstraints constraints) {
                   // Mendapatkan ukuran layar
                   double screenWidth = MediaQuery.of(context).size.width;
-                  double screenHeight = MediaQuery.of(context).size.height;
 
                   // Menentukan ukuran berdasarkan ukuran layar
                   int crossAxisCount = screenWidth > 600? 3 : 2; // Contoh penyesuaian
