@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kuis_webapi/ui/home.dart';
+import 'package:kuis_webapi/ui/monitoringstatus.dart';
+import 'package:kuis_webapi/ui/cart.dart';
 
 class BottomNavigasiBar extends StatefulWidget {
   
@@ -14,12 +16,12 @@ class _BottomNavigasiBarState extends State<BottomNavigasiBar> {
   // ignore: non_constant_identifier_names
   var menu_icon = [
     Icons.home,
-    Icons.calendar_month,
-    Icons.person,
+    Icons.notifications_active_rounded,
+    Icons.shopping_cart_rounded,
   ];
 
   // ignore: non_constant_identifier_names
-  var menu_label = ["Beranda", "Riwayat", "Doktor"];
+  var menu_label = ["Home", "Monitoring Status", "Cart"];
   int selectedIndex = 0;
   @override
   void initState() {
@@ -46,20 +48,20 @@ class _BottomNavigasiBarState extends State<BottomNavigasiBar> {
           (route) => false);
         // Lakukan sesuatu untuk item pertama di sini
       } else if (index == 1) {
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(
-        //     // ignore: non_constant_identifier_names
-        //     builder: (Context) => const riwayatTransaksi(),
-        //   ),
-        //   (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            // ignore: non_constant_identifier_names
+            builder: (Context) =>  Monitoringstatus(),
+          ),
+          (route) => false);
         // Lakukan sesuatu untuk item kedua di sini
       } else if (index == 2) {
-        // Navigator.of(context).pushAndRemoveUntil(
-        //   MaterialPageRoute(
-        //     // ignore: non_constant_identifier_names
-        //     builder: (Context) => const daftar_dokter(),
-        //   ),
-        //   (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            // ignore: non_constant_identifier_names
+            builder: (Context) => Cart(),
+          ),
+          (route) => false);
         // Lakukan sesuatu untuk item ketiga di sini
       }},
       items: menu_icon

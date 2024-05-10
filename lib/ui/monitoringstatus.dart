@@ -4,8 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'login.dart';
 import 'bottomNav.dart'; // Pastikan untuk mengimpor file yang berisi BottomNav
 
-class Home extends StatelessWidget {
-  Home({super.key});
+class Monitoringstatus extends StatelessWidget {
+  Monitoringstatus({super.key});
 
   final Box _boxLogin = Hive.box("login");
 
@@ -13,7 +13,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Page"),
+        title: const Text("Monitoring Page"),
         elevation: 0,
         actions: [
           Padding(
@@ -43,7 +43,7 @@ class Home extends StatelessWidget {
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      bottomNavigationBar: BottomNavigasiBar(inputan: 0),
+      bottomNavigationBar: BottomNavigasiBar(inputan: 1),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'home',
+              'monitoring',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
           ],
