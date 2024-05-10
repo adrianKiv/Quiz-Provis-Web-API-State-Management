@@ -69,22 +69,57 @@ Future<List<Item>> fetchItems() async {
 
 
 
+class Home extends StatefulWidget {
+  Home({Key? key}) : super(key: key);
 
+  @override
+  _HomeState createState() => _HomeState();
+}
 
-
-class Home extends StatelessWidget {
-  Home({super.key});
-  
+class _HomeState extends State<Home> {
   final Box _boxLogin = Hive.box("login");
+  TextEditingController _searchController = TextEditingController();
+  List<Item> _items = []; // This should be your original list of items
+  List<Item> _filteredItems = []; // This will be the list of items after search
+
+  @override
+  void initState() {
+    super.initState();
+    fetchItems().then((items) {
+      setState(() {
+        globalItems = items;
+        _items = items;
+        _filteredItems = items;
+      });
+    });
+
+    _searchController.addListener(() {
+      setState(() {
+        String searchText = _searchController.text;
+        _filteredItems = _items.where((item) {
+          return item.title.toLowerCase().contains(searchText.toLowerCase());
+        }).toList();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    fetchItems().then((items) {
-      globalItems = items;
-    });
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Page"),
+        title: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Search',
+          ),
+        ),
         elevation: 0,
         actions: [
           Padding(
@@ -117,17 +152,16 @@ class Home extends StatelessWidget {
       bottomNavigationBar: const BottomNavigasiBar(inputan: 0),
       body: Center(
         child: FutureBuilder<List<Item>>(
-          future: fetchItems(), // Pastikan fetchItems() adalah fungsi yang mengembalikan Future<List<Item>>
+          future: fetchItems(),
           builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
             if (snapshot.hasData) {
+              List<Item> items = _filteredItems; // Use the filtered items here
+
               return LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
-                  // Mendapatkan ukuran layar
                   double screenWidth = MediaQuery.of(context).size.width;
-
-                  // Menentukan ukuran berdasarkan ukuran layar
-                  int crossAxisCount = screenWidth > 600? 3 : 2; // Contoh penyesuaian
-                  double avatarRadius = screenWidth > 600? 115 : 60; // Contoh penyesuaian
+                  int crossAxisCount = screenWidth > 600? 3 : 2;
+                  double avatarRadius = screenWidth > 600? 115 : 60;
 
                   return GridView.builder(
                     padding: const EdgeInsets.all(10.0),
@@ -136,15 +170,15 @@ class Home extends StatelessWidget {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                     ),
-                    itemCount: snapshot.data!.length,
+                    itemCount: items.length,
                     itemBuilder: (context, index) {
-                      final item = snapshot.data![index];
+                      final item = items[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FoodDetailPage(item: item), // Kirimkan item ke NextPage
+                              builder: (context) => FoodDetailPage(item: item),
                             ),
                           );
                         },
@@ -164,7 +198,6 @@ class Home extends StatelessWidget {
                                 item.title,
                                 style: const TextStyle(fontSize: 16.0),
                               ),
-                              // Tampilkan detail lainnya tentang item di sini
                             ],
                           ),
                         ),
@@ -176,7 +209,6 @@ class Home extends StatelessWidget {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
-            // By default, show a loading spinner.
             return const CircularProgressIndicator();
           },
         ),

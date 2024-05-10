@@ -103,15 +103,29 @@ class CartPage extends StatelessWidget {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final cart = snapshot.data![index];
-                      return ListTile(
-                        leading: Image.memory(cart.toItem().imageUrl),
-                        title: Text('Nama: ${cart.toItem().title}'),
-                        subtitle: Text('Harga: ${cart.toItem().price}'),
-                        trailing: ElevatedButton(
-                          onPressed: () async {
-                            await deleteCart(context, cart.id);
-                          },
-                          child: const Icon(Icons.delete),
+                      return Card(
+                        elevation: 5,
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Image.memory(cart.toItem().imageUrl, width: 50, height: 50),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text('Nama: ${cart.toItem().title}', style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text('Harga: ${cart.toItem().price}', style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                            Spacer(),
+                            IconButton(
+                              onPressed: () async {
+                                await deleteCart(context, cart.id);
+                              },
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -127,7 +141,7 @@ class CartPage extends StatelessWidget {
           ),
           Container(
             padding: EdgeInsets.all(16.0),
-            color: Colors.blue,
+            color: Colors.grey,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
