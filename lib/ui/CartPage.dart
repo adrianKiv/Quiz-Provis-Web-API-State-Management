@@ -1,15 +1,15 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:kuis_webapi/models/cart.dart';
 import 'package:kuis_webapi/models/item.dart';
 
-
 import 'dart:convert';
 import 'login.dart';
 import 'bottomNav.dart'; // Pastikan untuk mengimpor file yang berisi BottomNav
+
+
 
 Future<List<Cart>> fetchCarts() async {
   final String? accessToken = Hive.box("login").get('accessToken');
@@ -19,7 +19,8 @@ Future<List<Cart>> fetchCarts() async {
   }
 
   final response = await http.get(
-    Uri.parse('http://146.190.109.66:8000/carts/$userId'), // Ganti dengan URL API keranjang Anda
+    Uri.parse(
+        'http://146.190.109.66:8000/carts/$userId'), // Ganti dengan URL API keranjang Anda
     headers: {
       'Authorization': 'Bearer $accessToken',
     },
@@ -28,7 +29,8 @@ Future<List<Cart>> fetchCarts() async {
   if (response.statusCode == 200) {
     print('berhasil');
     List jsonResponse = json.decode(response.body);
-    List<Cart> carts = jsonResponse.map((cart) => Cart.fromJsoncart(cart)).toList();
+    List<Cart> carts =
+        jsonResponse.map((cart) => Cart.fromJsoncart(cart)).toList();
 
     return carts;
   } else {
@@ -37,12 +39,37 @@ Future<List<Cart>> fetchCarts() async {
   }
 }
 
-
 class CartPage extends StatelessWidget {
   CartPage({Key? key}) : super(key: key);
 
   final Box _boxLogin = Hive.box("login");
 
+  
+ Future<void> deleteCart(BuildContext context, int cartId) async {
+    final String? accessToken = Hive.box("login").get('accessToken');
+    if (accessToken == null) {
+      throw Exception('No access token found');
+    }
+
+    final response = await http.delete(
+      Uri.parse('http://146.190.109.66:8000/carts/$cartId'), 
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('Delete successful');
+      // Navigate to new page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => CartPage()),
+      );
+    } else {
+      print('Delete failed');
+      throw Exception('Failed to delete cart');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,30 +89,48 @@ class CartPage extends StatelessWidget {
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      bottomNavigationBar: BottomNavigasiBar(inputan: 2),
-      body: FutureBuilder<List<Cart>>(
-        future: fetchCarts(),
-        builder: (BuildContext context, AsyncSnapshot<List<Cart>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final cart = snapshot.data![index];
-                return ListTile(
-                  leading: Image.memory(cart.toItem().imageUrl),
-                  title: Text('Nama: ${cart.toItem().title}'), // Ganti dengan nama item
-                  subtitle: Text('Harga: ${cart.toItem().price}'), // Ganti dengan deskripsi item
-                  trailing: Text('User ID: ${cart.userId}'), // Ganti dengan harga item
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
+      bottomNavigationBar: const BottomNavigasiBar(inputan: 2),
+      body: Column(
+        children: [
+          ElevatedButton(onPressed: () {
 
-          // By default, show a loading spinner.
-          return const CircularProgressIndicator();
-        },
+          }, 
+          child: const Text("checkout")),
+          Expanded(
+            child: FutureBuilder<List<Cart>>(
+              future: fetchCarts(),
+              builder: (BuildContext context, AsyncSnapshot<List<Cart>> snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final cart = snapshot.data![index];
+                      return ListTile(
+                        leading: Image.memory(cart.toItem().imageUrl),
+                        title: Text(
+                            'Nama: ${cart.toItem().title}'), // Ganti dengan nama item
+                        subtitle: Text(
+                            'Harga: ${cart.toItem().price}'), // Ganti dengan deskripsi item
+                        trailing: ElevatedButton(
+                            onPressed: () async {
+                              
+                              await deleteCart(context, cart.id);
+                            },
+                            child: const Icon(Icons.remove), // Ganti dengan harga item
+                        )
+                      );
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+            
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
