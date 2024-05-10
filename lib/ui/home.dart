@@ -110,21 +110,41 @@ class Home extends StatelessWidget {
           future: fetchItems(),
           builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(
+              return GridView.builder(
+                padding: const EdgeInsets.all(10.0),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // Jumlah item dalam setiap baris
+                  crossAxisSpacing: 10.0, // Spasi antar kolom
+                  mainAxisSpacing: 10.0, // Spasi antar baris
+                ),
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final item = snapshot.data![index];
-                  return ListTile(
-                    leading: Image.memory(item.imageUrl),
-                    title: Text(item.title),
-                    // Tampilkan detail lainnya tentang item di sini
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0), // Radius sudut bulat
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // Memusatkan di dalam Column
+                      children: <Widget>[
+                        CircleAvatar( // Menggunakan CircleAvatar untuk membuat gambar bulat
+                          backgroundImage: MemoryImage(item.imageUrl),
+                          radius: 125, // Radius gambar
+                        ),
+                        const SizedBox(height: 10.0), // Memberikan jarak antara gambar dan teks
+                        Text(
+                          item.title,
+                          style: const TextStyle(fontSize: 16.0), // Mengatur ukuran teks
+                        ),
+                        // Tampilkan detail lainnya tentang item di sini
+                      ],
+                    ),
                   );
                 },
               );
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
-
             // By default, show a loading spinner.
             return const CircularProgressIndicator();
           },
