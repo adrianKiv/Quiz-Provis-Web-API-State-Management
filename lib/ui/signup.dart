@@ -1,8 +1,218 @@
+// import 'package:flutter/material.dart';
+// import 'package:hive_flutter/hive_flutter.dart';
+
+// class Signup extends StatefulWidget {
+//   const Signup({super.key});
+
+//   @override
+//   State<Signup> createState() => _SignupState();
+// }
+
+// class _SignupState extends State<Signup> {
+//   final GlobalKey<FormState> _formKey = GlobalKey();
+
+//   final FocusNode _focusNodeEmail = FocusNode();
+//   final FocusNode _focusNodePassword = FocusNode();
+//   final FocusNode _focusNodeConfirmPassword = FocusNode();
+//   final TextEditingController _controllerUsername = TextEditingController();
+//   final TextEditingController _controllerPassword = TextEditingController();
+//   final TextEditingController _controllerConFirmPassword =
+//       TextEditingController();
+
+//   final Box _boxAccounts = Hive.box("accounts");
+//   bool _obscurePassword = true;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+//       body: Form(
+//         key: _formKey,
+//         child: SingleChildScrollView(
+//           padding: const EdgeInsets.symmetric(horizontal: 30.0),
+//           child: Column(
+//             children: [
+//               const SizedBox(height: 100),
+//               Text(
+//                 "Register",
+//                 style: Theme.of(context).textTheme.headlineLarge,
+//               ),
+//               const SizedBox(height: 10),
+//               Text(
+//                 "Create your account",
+//                 style: Theme.of(context).textTheme.bodyMedium,
+//               ),
+//               const SizedBox(height: 35),
+//               TextFormField(
+//                 controller: _controllerUsername,
+//                 keyboardType: TextInputType.name,
+//                 decoration: InputDecoration(
+//                   labelText: "Username",
+//                   prefixIcon: const Icon(Icons.person_outline),
+//                   border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                   enabledBorder: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                 ),
+//                 validator: (String? value) {
+//                   if (value == null || value.isEmpty) {
+//                     return "Please enter username.";
+//                   } else if (_boxAccounts.containsKey(value)) {
+//                     return "Username is already registered.";
+//                   }
+
+//                   return null;
+//                 },
+//                 onEditingComplete: () => _focusNodeEmail.requestFocus(),
+//               ),
+//               const SizedBox(height: 10),
+//               TextFormField(
+//                 controller: _controllerPassword,
+//                 obscureText: _obscurePassword,
+//                 focusNode: _focusNodePassword,
+//                 keyboardType: TextInputType.visiblePassword,
+//                 decoration: InputDecoration(
+//                   labelText: "Password",
+//                   prefixIcon: const Icon(Icons.password_outlined),
+//                   suffixIcon: IconButton(
+//                       onPressed: () {
+//                         setState(() {
+//                           _obscurePassword = !_obscurePassword;
+//                         });
+//                       },
+//                       icon: _obscurePassword
+//                           ? const Icon(Icons.visibility_outlined)
+//                           : const Icon(Icons.visibility_off_outlined)),
+//                   border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                   enabledBorder: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                 ),
+//                 validator: (String? value) {
+//                   if (value == null || value.isEmpty) {
+//                     return "Please enter password.";
+//                   } else if (value.length < 8) {
+//                     return "Password must be at least 8 character.";
+//                   }
+//                   return null;
+//                 },
+//                 onEditingComplete: () =>
+//                     _focusNodeConfirmPassword.requestFocus(),
+//               ),
+//               const SizedBox(height: 10),
+//               TextFormField(
+//                 controller: _controllerConFirmPassword,
+//                 obscureText: _obscurePassword,
+//                 focusNode: _focusNodeConfirmPassword,
+//                 keyboardType: TextInputType.visiblePassword,
+//                 decoration: InputDecoration(
+//                   labelText: "Confirm Password",
+//                   prefixIcon: const Icon(Icons.password_outlined),
+//                   suffixIcon: IconButton(
+//                       onPressed: () {
+//                         setState(() {
+//                           _obscurePassword = !_obscurePassword;
+//                         });
+//                       },
+//                       icon: _obscurePassword
+//                           ? const Icon(Icons.visibility_outlined)
+//                           : const Icon(Icons.visibility_off_outlined)),
+//                   border: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                   enabledBorder: OutlineInputBorder(
+//                     borderRadius: BorderRadius.circular(10),
+//                   ),
+//                 ),
+//                 validator: (String? value) {
+//                   if (value == null || value.isEmpty) {
+//                     return "Please enter password.";
+//                   } else if (value != _controllerPassword.text) {
+//                     return "Password doesn't match.";
+//                   }
+//                   return null;
+//                 },
+//               ),
+//               const SizedBox(height: 50),
+//               Column(
+//                 children: [
+//                   ElevatedButton(
+//                     style: ElevatedButton.styleFrom(
+//                       minimumSize: const Size.fromHeight(50),
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(20),
+//                       ),
+//                     ),
+//                     onPressed: () {
+//                       if (_formKey.currentState?.validate() ?? false) {
+//                         _boxAccounts.put(
+//                           _controllerUsername.text,
+//                           _controllerConFirmPassword.text,
+//                         );
+
+//                         ScaffoldMessenger.of(context).showSnackBar(
+//                           SnackBar(
+//                             width: 200,
+//                             backgroundColor:
+//                                 Theme.of(context).colorScheme.secondary,
+//                             shape: RoundedRectangleBorder(
+//                               borderRadius: BorderRadius.circular(10),
+//                             ),
+//                             behavior: SnackBarBehavior.floating,
+//                             content: const Text("Registered Successfully"),
+//                           ),
+//                         );
+
+//                         _formKey.currentState?.reset();
+
+//                         Navigator.pop(context);
+//                       }
+//                     },
+//                     child: const Text("Register"),
+//                   ),
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: [
+//                       const Text("Already have an account?"),
+//                       TextButton(
+//                         onPressed: () => Navigator.pop(context),
+//                         child: const Text("Login"),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   @override
+//   void dispose() {
+//     _focusNodeEmail.dispose();
+//     _focusNodePassword.dispose();
+//     _focusNodeConfirmPassword.dispose();
+//     _controllerUsername.dispose();
+//     _controllerPassword.dispose();
+//     _controllerConFirmPassword.dispose();
+//     super.dispose();
+//   }
+// }
+
+
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 
 class Signup extends StatefulWidget {
-  const Signup({super.key});
+  const Signup({Key? key}) : super(key: key);
 
   @override
   State<Signup> createState() => _SignupState();
@@ -10,17 +220,51 @@ class Signup extends StatefulWidget {
 
 class _SignupState extends State<Signup> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-
   final FocusNode _focusNodeEmail = FocusNode();
   final FocusNode _focusNodePassword = FocusNode();
   final FocusNode _focusNodeConfirmPassword = FocusNode();
   final TextEditingController _controllerUsername = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  final TextEditingController _controllerConFirmPassword =
-      TextEditingController();
+  final TextEditingController _controllerConfirmPassword = TextEditingController();
 
   final Box _boxAccounts = Hive.box("accounts");
   bool _obscurePassword = true;
+
+  Future<void> _registerUser() async {
+    final String apiUrl = 'http://146.190.109.66:8000/users/';
+
+    final Map<String, dynamic> userData = {
+      'username': _controllerUsername.text,
+      'password': _controllerPassword.text,
+    };
+
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(userData),
+    );
+
+    if (response.statusCode == 200) {
+      // User berhasil dibuat, lakukan sesuatu di sini
+      print('User berhasil dibuat');
+      Navigator.pop(context);
+    } else {
+      // Ada kesalahan, tampilkan pesan kesalahan
+      print('Kesalahan: ${response.body}');
+      final Map<String, dynamic> errorData = json.decode(response.body);
+      print('Detail: ${errorData['detail']}');
+      // Anda dapat menampilkan pesan kesalahan dalam bentuk Snackbar atau dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorData['detail']),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +306,6 @@ class _SignupState extends State<Signup> {
                   } else if (_boxAccounts.containsKey(value)) {
                     return "Username is already registered.";
                   }
-
                   return null;
                 },
                 onEditingComplete: () => _focusNodeEmail.requestFocus(),
@@ -96,7 +339,7 @@ class _SignupState extends State<Signup> {
                   if (value == null || value.isEmpty) {
                     return "Please enter password.";
                   } else if (value.length < 8) {
-                    return "Password must be at least 8 character.";
+                    return "Password must be at least 8 characters.";
                   }
                   return null;
                 },
@@ -105,7 +348,7 @@ class _SignupState extends State<Signup> {
               ),
               const SizedBox(height: 10),
               TextFormField(
-                controller: _controllerConFirmPassword,
+                controller: _controllerConfirmPassword,
                 obscureText: _obscurePassword,
                 focusNode: _focusNodeConfirmPassword,
                 keyboardType: TextInputType.visiblePassword,
@@ -149,27 +392,7 @@ class _SignupState extends State<Signup> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
-                        _boxAccounts.put(
-                          _controllerUsername.text,
-                          _controllerConFirmPassword.text,
-                        );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            width: 200,
-                            backgroundColor:
-                                Theme.of(context).colorScheme.secondary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            content: const Text("Registered Successfully"),
-                          ),
-                        );
-
-                        _formKey.currentState?.reset();
-
-                        Navigator.pop(context);
+                        _registerUser();
                       }
                     },
                     child: const Text("Register"),
@@ -191,16 +414,5 @@ class _SignupState extends State<Signup> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _focusNodeEmail.dispose();
-    _focusNodePassword.dispose();
-    _focusNodeConfirmPassword.dispose();
-    _controllerUsername.dispose();
-    _controllerPassword.dispose();
-    _controllerConFirmPassword.dispose();
-    super.dispose();
   }
 }

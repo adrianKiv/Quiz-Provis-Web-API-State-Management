@@ -53,7 +53,7 @@ class Home extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              _boxLogin.get("userName"),
+              'test',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
           ],
@@ -63,3 +63,4 @@ class Home extends StatelessWidget {
     );
   }
 }
+//_boxLogin.get("userName"),
