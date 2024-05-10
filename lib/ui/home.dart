@@ -43,6 +43,7 @@ class Home extends StatelessWidget {
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primary,
+      bottomNavigationBar: BottomNavigasiBar(inputan: 0,),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +60,6 @@ class Home extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNav(),
     );
   }
 }
