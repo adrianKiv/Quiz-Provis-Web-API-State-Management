@@ -44,7 +44,7 @@ class _Pilihan_PembayaranState extends State<Pilihan_Pembayaran> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pembayaran', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: const Text('Payment', style: TextStyle(fontWeight: FontWeight.w700)),
         elevation: 10,
         shadowColor: Colors.white,
       ),
@@ -52,7 +52,7 @@ class _Pilihan_PembayaranState extends State<Pilihan_Pembayaran> {
         padding: const EdgeInsets.only(left: 25, right: 25, top: 20, bottom: 20),
         child: Column(
           children: [
-            Text("Silahkan pilih metode pembayaran yang akan anda gunakan"),
+            Text("Please select the payment method you will use"),
             SizedBox(height: 16),
             Container(
               decoration: BoxDecoration(
@@ -140,7 +140,7 @@ class _Pilihan_PembayaranState extends State<Pilihan_Pembayaran> {
             ],
           ),
           child: const Text(
-            'Bayar',
+            'Pay',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,

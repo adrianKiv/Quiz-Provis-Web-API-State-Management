@@ -108,10 +108,10 @@ class CartPage extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('Nama: ${cart.toItem().title}',
+                                Text('Name: ${cart.toItem().title}',
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
-                                Text('Harga: ${cart.toItem().price}',
+                                Text('Price: ${cart.toItem().price}',
                                     style: const TextStyle(color: Colors.grey)),
                               ],
                             ),
@@ -151,12 +151,12 @@ class CartPage extends StatelessWidget {
                           .map((cart) => cart.toItem().price)
                           .reduce((value, element) => value + element);
                       return Text(
-                        'Total Harga: $totalHarga',
+                        'Total Price: $totalHarga',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       );
                     } else {
                       return const Text(
-                        'Tidak ada item dalam keranjang',
+                        'No items in cart',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       );
                     }

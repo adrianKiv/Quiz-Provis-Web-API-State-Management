@@ -44,7 +44,7 @@ Future<void> setStatusHarapBayar() async {
   );
 
   if (response.statusCode == 200) {
-    print('Berhasil mengatur status menjadi harap bayar');
+    print('Successfully set the status to please pay');
   } else {
     throw Exception('Failed to set status');
   }
@@ -77,13 +77,13 @@ Future<String> addToCart(Item item) async {
 
     if (response.statusCode == 200) {
       setStatusHarapBayar();
-      return 'Berhasil menambahkan item ke keranjang';
+      return 'Successfully added item to cart';
     } else {
-      throw Exception('Gagal menambahkan item ke keranjang');
+      throw Exception('Failed to add item to cart');
     }
   }else{
     
-    throw Exception('Gagal menambahkan item ke keranjang');
+    throw Exception('Failed to add item to cart');
   }
 }
 
@@ -104,73 +104,83 @@ class FoodDetailPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: screenWidth,
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 3,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          elevation: 5, // Menambahkan bayangan untuk efek 3D
+          margin: const EdgeInsets.all(8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: screenWidth,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(1),
+                        spreadRadius: 3,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.memory(
-                  item.imageUrl,
-                  fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.memory(
+                      item.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 16.0),
+                Text(
+                  item.title,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  'Price: Rp${item.price}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.green,
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                Text(
+                  item.description,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        await addToCart(item);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } catch (e) {
+                        print(e); // Tampilkan pesan kesalahan
+                      }
+                    },
+                    child: const Text('Add to cart'),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16.0),
-            Text(
-              item.title,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              'Harga: Rp${item.price}',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.green,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              item.description,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await addToCart(item);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home()),
-                    );
-                  } catch (e) {
-                    print(e); // Tampilkan pesan kesalahan
-                  }
-                },
-                child: const Text('Tambahkan ke Keranjang'),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

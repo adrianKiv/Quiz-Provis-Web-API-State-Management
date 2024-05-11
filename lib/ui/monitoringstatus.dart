@@ -299,7 +299,7 @@ void dispose() {
           ),
         ],
       ),
-      child: const Text("Belum Bayar"),
+      child: const Text("Not yet paid"),
     ),
   );
 }
@@ -319,7 +319,7 @@ Widget tunggu(BuildContext context) {
         ),
       ],
     ),
-    child: const Text("pesanan sedang di cek"),
+    child: const Text("Order is being checked"),
   );
 }
 
@@ -338,7 +338,7 @@ Widget ditolak(BuildContext context) {
         ),
       ],
     ),
-    child: const Text("pesanan Ditolak penjual"),
+    child: const Text("Order rejected by seller"),
   );
 }
 
@@ -357,7 +357,7 @@ Widget diantar(BuildContext context) {
         ),
       ],
     ),
-    child: const Text("pesanan diantar"),
+    child: const Text("Order delivered"),
   );
 }
 
@@ -376,7 +376,7 @@ Widget selesai(BuildContext context) {
         ),
       ],
     ),
-    child: const Text("pesanan sudah di antar"),
+    child: const Text("the order has been delivered"),
   );
 }
 
@@ -408,7 +408,7 @@ Widget diterima(BuildContext context) {
           ),
         ],
       ),
-      child: const Text("sudah sampai"),
+      child: const Text("Order Arrived"),
     ),
   );
 }
