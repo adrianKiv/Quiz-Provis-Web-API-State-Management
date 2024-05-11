@@ -99,11 +99,11 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 10),
               Text(
-                "Mhs 1: 2200939_Adrian Mulianto",
+                "Mhs 1: (2200939) Adrian Mulianto",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold) ?? const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
-                "Mhs 2: 2201017_Ilham Akbar",
+                "Mhs 2: (2201017) Ilham Akbar",
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold) ?? const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 60),
