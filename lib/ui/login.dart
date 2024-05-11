@@ -94,7 +94,7 @@ class _LoginState extends State<Login> {
             children: [
               const SizedBox(height: 150),
               Text(
-                "Welcome back",
+                "Kelompok: 3",
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 10),
