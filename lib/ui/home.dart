@@ -106,115 +106,127 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          decoration: const InputDecoration(
-            hintText: 'Search',
-            contentPadding: EdgeInsets.all(8.0),
-            prefixIcon: Icon(Icons.search, size: 30),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(width: 2.0),
-            ),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: TextField(
+        controller: _searchController,
+        decoration: const InputDecoration(
+          hintText: 'Search',
+          contentPadding: EdgeInsets.all(8.0),
+          prefixIcon: Icon(Icons.search, size: 30),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(width: 2.0),
           ),
         ),
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  _boxLogin.clear();
-                  _boxLogin.put("loginStatus", false);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const Login();
-                      },
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.logout_rounded),
-              ),
+      ),
+      elevation: 0,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white),
             ),
-          )
-        ],
-      ),
-      backgroundColor: Colors.white,
-      bottomNavigationBar: const BottomNavigasiBar(inputan: 0),
-      body: Center(
-        child: FutureBuilder<List<Item>>(
-          future: fetchItems(),
-          builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
-            if (snapshot.hasData) {
-              List<Item> items = _filteredItems; // Use the filtered items here
-
-              return LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
-                  double screenWidth = MediaQuery.of(context).size.width;
-                  int crossAxisCount = screenWidth > 600? 3 : 2;
-                  double avatarRadius = screenWidth > 600? 115 : 60;
-
-                  return GridView.builder(
-                    padding: const EdgeInsets.all(10.0),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0,
-                    ),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      final item = items[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FoodDetailPage(item: item),
-                            ),
-                          );
-                        },
-                        child: Card(
-                          shadowColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              CircleAvatar(
-                                backgroundImage: MemoryImage(item.imageUrl),
-                                radius: avatarRadius,
-                              ),
-                              const SizedBox(height: 10.0),
-                              Text(
-                                item.title,
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+            child: IconButton(
+              onPressed: () {
+                _boxLogin.clear();
+                _boxLogin.put("loginStatus", false);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const Login();
                     },
-                  );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            return const CircularProgressIndicator();
-          },
+                  ),
+                );
+              },
+              icon: const Icon(Icons.logout_rounded),
+            ),
+          ),
+        )
+      ],
+    ),
+    backgroundColor: Colors.white,
+    bottomNavigationBar: const BottomNavigasiBar(inputan: 0),
+    body: Stack(
+      children: [
+        // Menampilkan gambar dari assets di bagian atas body
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Image.asset('images/homefood2.jpg', fit: BoxFit.cover),
         ),
-      ),
-    );
-  }
+        Center(
+          child: FutureBuilder<List<Item>>(
+            future: fetchItems(),
+            builder: (BuildContext context, AsyncSnapshot<List<Item>> snapshot) {
+              if (snapshot.hasData) {
+                List<Item> items = _filteredItems; // Use the filtered items here
+
+                return LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    double screenWidth = MediaQuery.of(context).size.width;
+                    int crossAxisCount = screenWidth > 600? 3 : 2;
+                    double avatarRadius = screenWidth > 600? 115 : 60;
+
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(10.0),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 10.0,
+                        mainAxisSpacing: 10.0,
+                      ),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final item = items[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FoodDetailPage(item: item),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            shadowColor: Colors.black.withOpacity(1), // Adjust color and opacity as needed
+                            elevation: 5.0, // Adjust elevation for shadow depth
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                CircleAvatar(
+                                  backgroundImage: MemoryImage(item.imageUrl),
+                                  radius: avatarRadius,
+                                ),
+                                const SizedBox(height: 10.0),
+                                Text(
+                                  item.title,
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }

@@ -289,7 +289,15 @@ void dispose() {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.grey
+        color: Colors.grey,
+          boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // Adjust for shadow direction
+          ),
+        ],
       ),
       child: const Text("Belum Bayar"),
     ),
@@ -301,7 +309,15 @@ Widget tunggu(BuildContext context) {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.yellow
+      color: Colors.yellow,
+        boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 5,
+          blurRadius: 7,
+          offset: const Offset(0, 3), // Adjust for shadow direction
+        ),
+      ],
     ),
     child: const Text("pesanan sedang di cek"),
   );
@@ -312,7 +328,15 @@ Widget ditolak(BuildContext context) {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.red
+      color: Colors.red,
+        boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 5,
+          blurRadius: 7,
+          offset: const Offset(0, 3), // Adjust for shadow direction
+        ),
+      ],
     ),
     child: const Text("pesanan Ditolak penjual"),
   );
@@ -323,7 +347,15 @@ Widget diantar(BuildContext context) {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.grey
+      color: Colors.grey,
+        boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 5,
+          blurRadius: 7,
+          offset: const Offset(0, 3), // Adjust for shadow direction
+        ),
+      ],
     ),
     child: const Text("pesanan diantar"),
   );
@@ -334,7 +366,15 @@ Widget selesai(BuildContext context) {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.green
+      color: Colors.green,
+        boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 5,
+          blurRadius: 7,
+          offset: const Offset(0, 3), // Adjust for shadow direction
+        ),
+      ],
     ),
     child: const Text("pesanan sudah di antar"),
   );
@@ -358,7 +398,15 @@ Widget diterima(BuildContext context) {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.green
+        color: Colors.green,
+          boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // Adjust for shadow direction
+          ),
+        ],
       ),
       child: const Text("sudah sampai"),
     ),
