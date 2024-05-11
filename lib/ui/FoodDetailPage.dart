@@ -96,7 +96,6 @@ class FoodDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mendapatkan ukuran layar
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -104,31 +103,54 @@ class FoodDetailPage extends StatelessWidget {
         title: Text(item.title),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: screenWidth,
+              height: 200,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10)
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
               ),
-              child: Image.memory(item.imageUrl)
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.memory(
+                  item.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
-            const SizedBox(height: 8.0),
+            ),
+            const SizedBox(height: 16.0),
             Text(
               item.title,
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 8.0),
             Text(
               'Harga: Rp${item.price}',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.green,
+              ),
             ),
             const SizedBox(height: 8.0),
             Text(
               item.description,
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
             const Spacer(),
             SizedBox(
@@ -138,7 +160,6 @@ class FoodDetailPage extends StatelessWidget {
                   try {
                     await addToCart(item);
                     Navigator.pushReplacement(
-                      // ignore: use_build_context_synchronously
                       context,
                       MaterialPageRoute(builder: (context) => Home()),
                     );

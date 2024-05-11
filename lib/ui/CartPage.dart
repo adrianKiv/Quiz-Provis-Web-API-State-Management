@@ -82,7 +82,7 @@ class CartPage extends StatelessWidget {
           )
         ],
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Colors.white,
       bottomNavigationBar: const BottomNavigasiBar(inputan: 2),
       body: Column(
         children: [
@@ -138,7 +138,7 @@ class CartPage extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(16.0),
-            color: Colors.grey,
+            color: Colors.lightBlue,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

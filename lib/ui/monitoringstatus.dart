@@ -232,7 +232,7 @@ void dispose() {
           )
         ],
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Colors.white,
       bottomNavigationBar: const BottomNavigasiBar(inputan: 1),
       body: Center(
           child: FutureBuilder<String>(
@@ -258,7 +258,7 @@ void dispose() {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       diantar(context),
-                      const SizedBox(height: 20,),
+                      const SizedBox(height: 20),
                       diterima(context),
                     ],
                   );
@@ -289,12 +289,13 @@ void dispose() {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white
+        color: Colors.grey
       ),
       child: const Text("Belum Bayar"),
     ),
   );
 }
+
 Widget tunggu(BuildContext context) {
   return Container(
     padding: const EdgeInsets.all(20),
@@ -316,12 +317,13 @@ Widget ditolak(BuildContext context) {
     child: const Text("pesanan Ditolak penjual"),
   );
 }
+
 Widget diantar(BuildContext context) {
   return Container(
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
-      color: Colors.white
+      color: Colors.grey
     ),
     child: const Text("pesanan diantar"),
   );

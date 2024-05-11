@@ -65,8 +65,6 @@ Future<List<Item>> fetchItems() async {
 }
 
 
-
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -108,7 +106,6 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,10 +114,10 @@ class _HomeState extends State<Home> {
           controller: _searchController,
           decoration: const InputDecoration(
             hintText: 'Search',
+            contentPadding: EdgeInsets.all(8.0),
             prefixIcon: Icon(Icons.search, size: 30),
             border: OutlineInputBorder(
-              
-              borderSide: const BorderSide(width: 2.0),
+              borderSide: BorderSide(width: 2.0),
             ),
           ),
         ),
@@ -152,7 +149,7 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Colors.white,
       bottomNavigationBar: const BottomNavigasiBar(inputan: 0),
       body: Center(
         child: FutureBuilder<List<Item>>(
@@ -187,6 +184,7 @@ class _HomeState extends State<Home> {
                           );
                         },
                         child: Card(
+                          shadowColor: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15.0),
                           ),
